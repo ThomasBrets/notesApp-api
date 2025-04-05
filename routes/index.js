@@ -13,6 +13,3 @@ router.use("/users", validateUser, users)
 module.exports = router;
 
 
-
-
-
