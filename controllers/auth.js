@@ -23,7 +23,7 @@ class AuthController {
           }
 
           const payload = {
-            id:user.id,
+            id: user.id,
             email: user.email,
             password: user.password,
           };
@@ -31,7 +31,11 @@ class AuthController {
           const token = generateToken(payload);
           console.log("TOKEN", token);
 
-          res.cookie("token", token);
+          res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+          });
 
           console.log("PAYLOAD", payload);
           res.send(payload);
@@ -48,14 +52,13 @@ class AuthController {
   }
 
   static async secret(req, res) {
-    res.send(req.user)
+    res.send(req.user);
   }
 
   static async findMyUser(req, res) {
     console.log("Cookies: ", req.cookies); // Verificar si la cookie llega
     console.log("USER", req.user);
-    res.send(req.user)
-    
+    res.send(req.user);
   }
 }
 
