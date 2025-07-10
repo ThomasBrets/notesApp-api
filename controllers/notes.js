@@ -43,14 +43,14 @@ class NotesController {
 
     return error
       ? res.status(data.status || 500).json({ message: data })
-      : res.status(201).json(data);
+      : res.status(204).json(data);
   }
   static async deleteNote(req, res) {
     const { error, data } = await NotesService.deleteNote(req.params.noteId);
 
     return error
       ? res.status(data.status || 500).json({ message: data })
-      : res.status(201).json(data);
+      : res.status(204).json(data);
   }
 
   static async SearchNote(req, res) {
