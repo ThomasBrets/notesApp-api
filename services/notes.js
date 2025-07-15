@@ -25,28 +25,33 @@ class NotesService {
     }
   }
   static async addNote(body, userId) {
-    const { title, content, tags } = body;
+   const { title, content, tags } = body;
 
-    try {
-      const note = await Notes.create({
-        title,
-        content,
-        tags: tags || [], // Si no hay tags, inicialízalo como un array vacío
-        author: userId, // Asegúrate de que el userId se pase correctamente
-      });
+  try {
+    // 1. Crear la nota
+    const note = new Notes({
+      title,
+      content,
+      tags: tags || [],
+      author: userId,
+    });
 
-      // Aseguramos que _id se convierta correctamente
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { $push: { notes: note._id } },
-        { new: true }
-      );
+    await note.save(); // Guardar la nota
 
-      console.log("✅ Nota agregada al usuario:", updatedUser.notes);
+    // 2. Buscar el usuario
+    const user = await User.findById(userId);
+    
+    // 3. Asegurarse que tiene el array de notas
+    if (!user.notes) {
+      user.notes = [];
+    }
 
-      // 3. Verificamos si la nota se agregó al array del usuario
-      const user = await User.findById(userId).populate("notes");
-      console.log("📌 Notas del usuario después del push:", user.notes);
+    // 4. Agregar la nota
+    user.notes.push(note._id);
+    await user.save();
+
+    // 5. (Opcional) Verificar que se haya agregado
+    console.log("✅ Notas del usuario:", user.notes);
 
       return { error: false, data: note };
     } catch (error) {
