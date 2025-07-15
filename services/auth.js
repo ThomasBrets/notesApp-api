@@ -12,6 +12,7 @@ class AuthService {
           lastName,
           email,
           password,
+          notes:[]
         });
         const resp = await user.save();
 

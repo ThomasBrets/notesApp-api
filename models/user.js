@@ -5,18 +5,18 @@ const findOrCreate = require("mongoose-findorcreate");
 
 const UserSchema = new Schema(
   {
-    name: { type: "String", required: true },
-    lastName: { type: "String" },
+    name: { type: String, required: true },
+    lastName: { type: String },
     email: {
-      type: "String",
+      type: String,
       required: true,
       unique: true, // Asegura que el email sea único
       lowercase: true, // timestamps añade automáticamente createdAt y updatedAt
     },
-    password: { type: "String", required: true },
+    password: { type: String, required: true },
     notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note", default: [] }],
     createdOn: { type: Date, default: Date.now }, //Si no funciona cambiar a createdOn: { type: Date, default: () => new Date() }
-    salt: { type: "String" },
+    salt: { type: String },
   },
   { timestamps: true }
 );
