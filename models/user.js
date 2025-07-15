@@ -21,6 +21,7 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
+
 UserSchema.methods.hash = (password, salt) => {
   return bcrypt.hash(password, salt);
 };
