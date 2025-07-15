@@ -1,5 +1,5 @@
 const Notes = require("../models/notes");
-
+const User = require("../models/user");
 
 class NotesService {
   static async getAllNotes() {
@@ -25,14 +25,18 @@ class NotesService {
     }
   }
   static async addNote(body, userId) {
-    const { title, content, tags } = body; 
+    const { title, content, tags } = body;
 
     try {
       const note = await Notes.create({
         title,
         content,
-        tags: tags || [],   // Si no hay tags, inicialízalo como un array vacío
-        author: userId      // Asegúrate de que el userId se pase correctamente
+        tags: tags || [], // Si no hay tags, inicialízalo como un array vacío
+        author: userId, // Asegúrate de que el userId se pase correctamente
+      });
+
+      await User.findByIdAndUpdate(userId, {
+        $push: { notes: note.id },
       });
 
       return { error: false, data: note };
@@ -85,8 +89,6 @@ class NotesService {
     try {
       const note = await Notes.findByIdAndDelete(id);
 
-      
-
       return { error: false, data: note };
     } catch (error) {
       return { error: true, data: error.message };
@@ -98,12 +100,12 @@ class NotesService {
       const notes = await Notes.find({
         author: userId,
         $or: [
-          {title: {$regex: new RegExp(query, "i")}},
-          {content: {$regex: new RegExp(query, "i")}},
-        ]
-      })
+          { title: { $regex: new RegExp(query, "i") } },
+          { content: { $regex: new RegExp(query, "i") } },
+        ],
+      });
 
-      return { error: false, data: notes};
+      return { error: false, data: notes };
     } catch (error) {
       return { error: true, data: error.message };
     }
