@@ -14,7 +14,7 @@ const UserSchema = new Schema(
       lowercase: true, // timestamps añade automáticamente createdAt y updatedAt
     },
     password: { type: "String", required: true },
-    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
+    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note", default: [] }],
     createdOn: { type: Date, default: Date.now }, //Si no funciona cambiar a createdOn: { type: Date, default: () => new Date() }
     salt: { type: "String" },
   },
