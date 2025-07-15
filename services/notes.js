@@ -35,9 +35,18 @@ class NotesService {
         author: userId, // Asegúrate de que el userId se pase correctamente
       });
 
-      await User.findByIdAndUpdate(userId, {
-        $push: { notes: note.id },
-      });
+      // Aseguramos que _id se convierta correctamente
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $push: { notes: note._id } },
+        { new: true }
+      );
+
+      console.log("✅ Nota agregada al usuario:", updatedUser.notes);
+
+      // 3. Verificamos si la nota se agregó al array del usuario
+      const user = await User.findById(userId).populate("notes");
+      console.log("📌 Notas del usuario después del push:", user.notes);
 
       return { error: false, data: note };
     } catch (error) {
